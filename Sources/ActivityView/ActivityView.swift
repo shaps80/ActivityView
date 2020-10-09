@@ -2,7 +2,15 @@ import SwiftUI
 import LinkPresentation
 import CoreServices
 
-public struct ActivityView: UIViewControllerRepresentable {
+extension View {
+
+    public func activity(isPresented: Binding<Bool>, items: [Any], activities: [UIActivity]? = nil, onComplete: UIActivityViewController.CompletionWithItemsHandler? = nil) -> some View {
+        background(ActivityView(isPresented: isPresented, items: items, activities: activities, onComplete: onComplete))
+    }
+
+}
+
+private struct ActivityView: UIViewControllerRepresentable {
 
     private let activityItems: [Any]
     private let applicationActivities: [UIActivity]?
@@ -17,11 +25,11 @@ public struct ActivityView: UIViewControllerRepresentable {
         completion = onComplete
     }
 
-    public func makeUIViewController(context: Context) -> _ActivityWrapper {
+    func makeUIViewController(context: Context) -> _ActivityWrapper {
         _ActivityWrapper(isPresented: $isPresented, activityItems: activityItems, applicationActivities: applicationActivities, onComplete: completion)
     }
 
-    public func updateUIViewController(_ uiViewController: _ActivityWrapper, context: Context) {
+    func updateUIViewController(_ uiViewController: _ActivityWrapper, context: Context) {
         uiViewController.isPresented = $isPresented
         uiViewController.completion = completion
         uiViewController.updateState()
@@ -29,7 +37,7 @@ public struct ActivityView: UIViewControllerRepresentable {
 
 }
 
-public final class _ActivityWrapper: UIViewController {
+private final class _ActivityWrapper: UIViewController {
 
     var activityItems: [Any]
     var applicationActivities: [UIActivity]?
@@ -47,7 +55,7 @@ public final class _ActivityWrapper: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func didMove(toParent parent: UIViewController?) {
+    override func didMove(toParent parent: UIViewController?) {
         super.didMove(toParent: parent)
         updateState()
     }
@@ -70,22 +78,20 @@ public final class _ActivityWrapper: UIViewController {
 
 }
 
-struct ActivityViewTest: View {
-    @State private var isActivityPresented = false
+private struct ShareView: View {
+    @State private var isPresented = false
+
     var body: some View {
-        return Button("Share") { isActivityPresented = true }
-            .background(
-                ActivityView(
-                    isPresented: $isActivityPresented,
-                    items: ["text"]
-                )
+        return Button("Share") { isPresented = true }
+            .activity(
+                isPresented: $isPresented,
+                items: ["text"]
             )
     }
 }
 
 struct ActivityView_Previews: PreviewProvider {
     static var previews: some View {
-        ActivityViewTest()
-            .previewDevice("iPhone 8 Plus")
+        ShareView()
     }
 }
