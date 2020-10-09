@@ -4,6 +4,12 @@ import CoreServices
 
 extension View {
 
+    /// Presents an activity sheet to the user.
+    /// - Parameters:
+    ///   - isPresented: A binding to whether the activity sheet should be shown.
+    ///   - items: The items to shared via the activity sheet
+    ///   - activities: Any additional activities to present in the share sheet (optional)
+    ///   - onComplete: A closure returning the result to the caller (optional)
     public func activity(isPresented: Binding<Bool>, items: [Any], activities: [UIActivity]? = nil, onComplete: UIActivityViewController.CompletionWithItemsHandler? = nil) -> some View {
         background(ActivityView(isPresented: isPresented, items: items, activities: activities, onComplete: onComplete))
     }
