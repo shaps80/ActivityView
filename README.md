@@ -5,10 +5,6 @@
 
 # ActivityView
 
-> WIP: This library is __not__ yet completed, as such no specific versioning will be included until documentation and such have been included.
->
-> That said, you're free to try the library as its quite functional and a v1.0.0 will be released soon.
-
 A SwiftUI view for presenting a `UIActivityViewController` correctly across all platforms.
 
 ## Example
